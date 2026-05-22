@@ -1,37 +1,87 @@
 import { useState, useEffect } from "react";
-import BMICalculator from "../components/BMICalculator"; // ✅ FIXED
+import BMICalculator from "../components/BMICalculator";
+
+import { useTranslation } from "react-i18next";
 
 
 
 export default function Profile() {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [avatar, setAvatar] = useState(
-    "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+    "https://cdn-icons-png.flaticon.com/512/847/847969.png",
   );
   const [showAvatar, setShowAvatar] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("profile"));
-    if (saved) {
-      setName(saved.name || "");
-      setAge(saved.age || "");
-      setWeight(saved.weight || "");
-      setHeight(saved.height || "");
-      setAvatar(saved.avatar || avatar);
-    }
+    const fetchProfile = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user?.id) return;
+
+        const res = await fetch(
+          `http://localhost:5000/api/user/profile/${user.id}`,
+        );
+
+        const data = await res.json();
+
+        setName(data.name || "");
+        setAge(data.age || "");
+        setWeight(data.weight || "");
+        setHeight(data.height || "");
+        setAvatar(data.avatar || avatar);
+
+        // ✅ ADD THIS (sync with localStorage for dashboard)
+        localStorage.setItem("profile", JSON.stringify(data));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchProfile();
   }, []);
 
-  const handleSave = () => {
-    const data = { name, age, weight, height, avatar };
-    localStorage.setItem("profile", JSON.stringify(data));
-    window.dispatchEvent(new Event("profileUpdated"));
+  const handleSave = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
 
-    setSavedMsg(true);
-    setTimeout(() => setSavedMsg(false), 2000);
+      const updatedData = {
+        name,
+        age,
+        weight,
+        height,
+        avatar,
+      };
+
+      const res = await fetch(
+        `http://localhost:5000/api/user/profile/${user.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData),
+        },
+      );
+
+      if (res.ok) {
+        // ✅ ADD THIS (KEY FIX)
+        localStorage.setItem("profile", JSON.stringify(updatedData));
+
+        // ✅ ADD THIS (REAL-TIME UPDATE)
+        window.dispatchEvent(new Event("profileUpdated"));
+
+        setSavedMsg(true);
+        setTimeout(() => setSavedMsg(false), 2000);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const avatars = [
@@ -43,10 +93,9 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex justify-center p-4">
-             <div className="w-full max-w-md md:max-w-2xl bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition">
-
+      <div className="w-full max-w-md md:max-w-2xl bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition">
         <h1 className="text-3xl font-bold text-center mb-6 text-[#134611]">
-          Profile
+          {t("profile")}
         </h1>
 
         {/* Avatar */}
@@ -95,19 +144,31 @@ export default function Profile() {
             onChange={(e) => setAge(e.target.value)}
             className="p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#EF8A17]"
           />
+          <input
+            type="number"
+            placeholder="Weight (kg)"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            className="p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#EF8A17]"
+          />
+          <input
+            type="number"
+            placeholder="Height (cm)"
+            value={height}
+            onChange={(e) => setHeight(e.target.value)}
+            className="p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#EF8A17]"
+          />
         </div>
 
-        {/* ✅ BMI Calculator (UI unchanged outside) */}
         <div className="mt-6 flex justify-center">
-          <BMICalculator />
+          <BMICalculator weight={weight} height={height} />
         </div>
 
-        {/* Save */}
         <button
           onClick={handleSave}
           className="mt-6 w-full bg-[#06D6A0] text-white py-3 rounded-xl font-bold hover:scale-105 transition"
         >
-          Save Profile
+          {t("saveProfile")}
         </button>
 
         {savedMsg && (

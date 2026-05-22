@@ -1,20 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useTranslation } from "react-i18next"; // ✅ ADDED
 
 function StepMedical() {
   const navigate = useNavigate();
+  const { t } = useTranslation(); // ✅ ADDED
 
   const [selected, setSelected] = useState([]);
   const [error, setError] = useState("");
 
+  // ✅ USE KEYS INSTEAD OF TEXT
   const conditions = [
-    "None",
-    "Diabetes",
-    "Thyroid",
-    "PCOS",
-    "High Cholesterol",
-    "Blood Pressure",
+    { key: "none" },
+    { key: "diabetes" },
+    { key: "thyroid" },
+    { key: "pcos" },
+    { key: "cholesterol" },
+    { key: "bloodPressure" },
   ];
 
   function toggle(condition) {
@@ -27,7 +30,8 @@ function StepMedical() {
 
   async function finish() {
     if (selected.length === 0) {
-      setError("Please select at least one option");
+      setError(t("selectMedicalError")); // ✅ UPDATED
+      localStorage.setItem("onboarded", "true");
       return;
     }
 
@@ -37,7 +41,6 @@ function StepMedical() {
 
     const user = JSON.parse(localStorage.getItem("user"));
 
-    // ✅ CRITICAL FIX
     if (!user?.id) {
       alert("User not found. Please login again.");
       return;
@@ -54,7 +57,7 @@ function StepMedical() {
       weight: parseFloat(localStorage.getItem("weight")),
       target_weight: parseFloat(localStorage.getItem("targetWeight")),
       goal_speed: localStorage.getItem("goalSpeed"),
-      medical: selected.join(","),
+      medical: selected.join(","), // ✅ sends keys (correct)
     };
 
     console.log("FINAL DATA:", data);
@@ -73,26 +76,26 @@ function StepMedical() {
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#e8f5ec] via-[#f4fff8] to-[#e6fff7] p-6">
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-bold text-[#134611] text-center mb-2">
-          Medical Conditions
+          {t("medicalTitle")} {/* ✅ UPDATED */}
         </h1>
 
         <p className="text-gray-500 text-center mb-8">
-          Do you have any medical conditions we should know about?
+          {t("medicalSubtitle")} {/* ✅ UPDATED */}
         </p>
 
         <div className="space-y-4">
           {conditions.map((condition) => (
             <div
-              key={condition}
-              onClick={() => toggle(condition)}
+              key={condition.key}
+              onClick={() => toggle(condition.key)} // ✅ UPDATED
               className={`p-4 border rounded-xl cursor-pointer transition
               ${
-                selected.includes(condition)
+                selected.includes(condition.key)
                   ? "bg-[#134611] text-white border-[#134611] shadow-lg"
                   : "bg-white border-gray-200 hover:border-[#06D6A0] hover:shadow-md"
               }`}
             >
-              {condition}
+              {t(condition.key)} {/* ✅ THIS FIXES TRANSLATION */}
             </div>
           ))}
         </div>
@@ -105,7 +108,7 @@ function StepMedical() {
           onClick={finish}
           className="mt-10 w-full bg-[#EF8A17] hover:bg-[#e07810] text-white py-3 rounded-xl text-lg font-semibold shadow-md"
         >
-          Finish
+          {t("finish")} {/* ✅ UPDATED */}
         </button>
       </div>
     </div>

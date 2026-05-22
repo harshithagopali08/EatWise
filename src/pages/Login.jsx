@@ -57,7 +57,7 @@ function Login() {
       // 🔥 FINAL DECISION (FIXED)
       if (!profile || profile.height === null || profile.height === undefined) {
         // 🆕 NEW USER
-        navigate("/user-details");
+        navigate("/onboarding/language");
       } else {
         // 🔁 EXISTING USER
         navigate("/dashboard");

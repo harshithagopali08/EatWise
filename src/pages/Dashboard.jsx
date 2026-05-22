@@ -1,38 +1,47 @@
 import { useEffect, useState } from "react";
+import RecommendationPage from "./RecommendationPage";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
+  const { t } = useTranslation();
+
   const [profile, setProfile] = useState({});
   const [water, setWater] = useState(5);
   const [sleep, setSleep] = useState(7);
-
-  const weeklyCalories = [1800, 2000, 1500, 2200, 2100, 1900, 2300];
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-  const loadProfile = () => {
-    const saved = JSON.parse(localStorage.getItem("profile"));
-    if (saved) setProfile(saved);
-  };
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
-
         if (!user?.id) return;
 
         const res = await fetch(
-          `http://localhost:5000/api/user/profile/${user.id}`,
+          `http://localhost:5000/api/user/profile/${user.id}`
         );
-
         const data = await res.json();
 
         setProfile(data);
+        localStorage.setItem("profile", JSON.stringify(data));
       } catch (err) {
         console.log(err);
       }
     };
 
+    const loadLocalProfile = () => {
+      const saved = JSON.parse(localStorage.getItem("profile"));
+      if (saved) setProfile(saved);
+    };
+
+    loadLocalProfile();
     fetchProfile();
+
+    window.addEventListener("profileUpdated", loadLocalProfile);
+    window.addEventListener("focus", fetchProfile);
+
+    return () => {
+      window.removeEventListener("profileUpdated", loadLocalProfile);
+      window.removeEventListener("focus", fetchProfile);
+    };
   }, []);
 
   const bmi =
@@ -79,70 +88,59 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 md:p-6 min-h-screen bg-[#F9FAFB]">
+
       {/* Greeting */}
       <div className="flex items-center gap-4 mb-6">
         <img
-          src={profile.avatar}
+          src={
+            profile.avatar ||
+            "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+          }
           className="w-16 h-16 rounded-full border-4 border-[#06D6A0]"
         />
         <h1 className="text-3xl font-bold text-[#134611]">
-          Hello, {profile.name || "User"} 👋
+          {t("hello")}, {profile.name || t("user")} 👋
         </h1>
       </div>
 
       {/* Cards */}
       <div className="grid md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-xl shadow border-l-4 border-[#06D6A0]">
-          <p className="text-gray-500">Height</p>
+          <p className="text-gray-500">{t("height")}</p>
           <h2 className="text-xl font-bold text-[#134611]">
             {profile.height || "--"} cm
           </h2>
         </div>
 
         <div className="bg-white p-4 rounded-xl shadow border-l-4 border-[#EF8A17]">
-          <p className="text-gray-500">Weight</p>
+          <p className="text-gray-500">{t("weight")}</p>
           <h2 className="text-xl font-bold text-[#134611]">
             {profile.weight || "--"} kg
           </h2>
         </div>
 
         <div className="bg-white p-4 rounded-xl shadow border-l-4 border-[#C6C013]">
-          <p className="text-gray-500">BMI</p>
+          <p className="text-gray-500">{t("bmi")}</p>
           <h2 className="text-xl font-bold text-[#134611]">{bmi}</h2>
         </div>
       </div>
 
       {/* Circles */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-        <Circle value={water} max={10} label="Water" color="#06D6A0" />
-        <Circle value={sleep} max={10} label="Sleep" color="#EF8A17" />
-        <Circle value={bmi} max={40} label="BMI" color="#C6C013" />
+        <Circle value={water} max={10} label={t("water")} color="#06D6A0" />
+        <Circle value={sleep} max={10} label={t("sleep")} color="#EF8A17" />
+        <Circle value={bmi} max={40} label={t("bmi")} color="#C6C013" />
       </div>
 
-      {/* Calories */}
-      <div className="bg-white p-6 rounded-xl shadow">
-        <h2 className="text-xl font-semibold mb-4 text-[#134611]">
-          Weekly Calories
-        </h2>
-
-        <div className="flex items-end gap-4 h-40">
-          {weeklyCalories.map((cal, i) => (
-            <div key={i} className="flex flex-col items-center w-full">
-              <div
-                className="w-6 bg-[#06D6A0] rounded-t"
-                style={{ height: `${cal / 20}px` }}
-              ></div>
-
-              <p className="text-sm mt-1 text-gray-600">{days[i]}</p>
-            </div>
-          ))}
-        </div>
+      {/* AI Recommendation */}
+      <div className="mt-6">
+        <RecommendationPage />
       </div>
 
       {/* Controls */}
       <div className="mt-8 grid grid-cols-2 gap-4">
         <div className="bg-white p-4 rounded-xl shadow">
-          <p className="text-gray-600">Water Intake</p>
+          <p className="text-gray-600">{t("waterIntake")}</p>
           <input
             type="range"
             min="0"
@@ -154,7 +152,7 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-white p-4 rounded-xl shadow">
-          <p className="text-gray-600">Sleep</p>
+          <p className="text-gray-600">{t("sleep")}</p>
           <input
             type="range"
             min="0"

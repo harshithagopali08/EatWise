@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // ✅ ADDED
 
 function UserDetails() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation(); // ✅ ADDED
 
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
@@ -14,7 +16,7 @@ function UserDetails() {
 
   const [error, setError] = useState("");
 
-  // ✅ PRE-FILL NAME FROM SIGNUP (important UX fix)
+  // ✅ PRE-FILL NAME FROM SIGNUP
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user.name) {
@@ -22,11 +24,23 @@ function UserDetails() {
     }
   }, []);
 
-  function next() {
-    console.log("Clicked Continue"); // 🔥 debug
+  // ✅ LOAD SAVED LANGUAGE (NO UI CHANGE)
+  useEffect(() => {
+    const savedLang = localStorage.getItem("language");
 
+    if (savedLang) {
+      let langCode = "en";
+
+      if (savedLang === "Hindi") langCode = "hi";
+      if (savedLang === "Telugu") langCode = "te";
+
+      i18n.changeLanguage(langCode);
+    }
+  }, []);
+
+  function next() {
     if (!name || !gender) {
-      setError("Please fill all details");
+      setError(t("fillDetails") || "Please fill all details");
       return;
     }
 
@@ -34,13 +48,13 @@ function UserDetails() {
 
     if (unit === "cm") {
       if (!heightCm || Number(heightCm) <= 0) {
-        setError("Please enter valid height in cm");
+        setError(t("validHeightCm") || "Please enter valid height in cm");
         return;
       }
       finalHeight = heightCm;
     } else {
       if (!feet || !inches) {
-        setError("Please enter feet and inches");
+        setError(t("validHeightFt") || "Please enter feet and inches");
         return;
       }
 
@@ -50,21 +64,18 @@ function UserDetails() {
 
     setError("");
 
-    // ✅ STORE DATA (important for backend later)
+    // ✅ STORE DATA
     localStorage.setItem("name", name);
     localStorage.setItem("gender", gender);
     localStorage.setItem("height", finalHeight);
 
-    // ✅ Update user object (important for StepMedical)
+    // ✅ UPDATE USER OBJECT
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       user.name = name;
       localStorage.setItem("user", JSON.stringify(user));
     }
 
-    console.log("Navigating to next page..."); // 🔥 debug
-
-    // ✅ NAVIGATION (your issue fix)
     navigate("/onboarding/goal");
   }
 
@@ -75,11 +86,11 @@ function UserDetails() {
     >
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
         <h1 className="text-3xl font-bold text-[#134611] text-center mb-2">
-          Tell Us About You
+          {t("tellUsAboutYou") || "Tell Us About You"}
         </h1>
 
         <p className="text-gray-500 text-center mb-8">
-          Help us personalize your experience
+          {t("personalizeExperience") || "Help us personalize your experience"}
         </p>
 
         {/* ERROR */}
@@ -90,14 +101,14 @@ function UserDetails() {
         {/* Name */}
         <div className="mb-4">
           <label className="block text-[#134611] font-semibold mb-2">
-            Name
+            {t("name") || "Name"}
           </label>
 
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your name"
+            placeholder={t("name") || "Enter your name"}
             className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-[#06D6A0]"
           />
         </div>
@@ -105,7 +116,7 @@ function UserDetails() {
         {/* Gender */}
         <div className="mb-4">
           <label className="block text-[#134611] font-semibold mb-2">
-            Gender
+            {t("gender") || "Gender"}
           </label>
 
           <select
@@ -113,9 +124,9 @@ function UserDetails() {
             onChange={(e) => setGender(e.target.value)}
             className="w-full border border-gray-300 rounded-lg p-3"
           >
-            <option value="">Select Gender</option>
-            <option>Male</option>
-            <option>Female</option>
+            <option value="">{t("gender") || "Select Gender"}</option>
+            <option>{t("male") || "Male"}</option>
+            <option>{t("female") || "Female"}</option>
             <option>Other</option>
           </select>
         </div>
@@ -123,7 +134,7 @@ function UserDetails() {
         {/* Height */}
         <div className="mb-4">
           <label className="block text-[#134611] font-semibold mb-2">
-            Height
+            {t("height") || "Height"}
           </label>
 
           <div className="flex gap-4 mb-3">
@@ -148,23 +159,21 @@ function UserDetails() {
             </button>
           </div>
 
-          {/* CM */}
           {unit === "cm" && (
             <input
               type="number"
-              placeholder="Enter height in cm"
+              placeholder={t("height") || "Enter height in cm"}
               value={heightCm}
               onChange={(e) => setHeightCm(e.target.value)}
               className="w-full border border-gray-300 rounded-lg p-3"
             />
           )}
 
-          {/* FT/IN */}
           {unit === "ft" && (
             <div className="flex gap-3">
               <input
                 type="number"
-                placeholder="Feet"
+               placeholder={t("feet")}
                 value={feet}
                 onChange={(e) => setFeet(e.target.value)}
                 className="w-1/2 border border-gray-300 rounded-lg p-3"
@@ -172,7 +181,7 @@ function UserDetails() {
 
               <input
                 type="number"
-                placeholder="Inches"
+                placeholder={t("inches")}
                 value={inches}
                 onChange={(e) => setInches(e.target.value)}
                 className="w-1/2 border border-gray-300 rounded-lg p-3"
@@ -187,7 +196,7 @@ function UserDetails() {
           className="w-full bg-[#EF8A17] hover:bg-[#e07810]
           text-white py-3 rounded-xl text-lg font-semibold shadow-md"
         >
-          Continue
+          {t("continue") || "Continue"}
         </button>
       </div>
     </div>

@@ -1,24 +1,34 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // ✅ ADDED
 
 function StepLanguage() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation(); // ✅ ADDED
 
   const [language, setLanguage] = useState("");
   const [error, setError] = useState(""); // ✅ added
 
   function next() {
     if (!language) {
-      setError("Please select your preferred language"); // ❌ removed alert
+      setError(t("selectLanguageError")); // ✅ UPDATED
       return;
     }
 
     setError("");
 
-    // ✅ STORE IN LOCALSTORAGE
+    // ✅ STORE IN LOCALSTORAGE (keep your key or change if needed)
     localStorage.setItem("language", language);
 
-    navigate("/onboarding/weight");
+    // ✅ ADD THIS LOGIC (convert to i18n codes)
+    let langCode = "en";
+    if (language === "Hindi") langCode = "hi";
+    if (language === "Telugu") langCode = "te";
+
+    // ✅ CHANGE LANGUAGE
+    i18n.changeLanguage(langCode);
+
+    navigate("/user-details");
   }
 
   return (

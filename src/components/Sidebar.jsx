@@ -1,19 +1,27 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import {
   Menu,
   X,
   ChevronLeft,
   ChevronRight,
   LayoutDashboard,
-  Utensils,
   Apple,
   User,
   LogOut,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Sidebar({ setPage }) {
+  const { t } = useTranslation();
+
   const [isOpen, setIsOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+const [collapsed, setCollapsed] = useState(false);
+
+// force expand on mount
+useEffect(() => {
+  setCollapsed(false);
+}, []);
   const [active, setActive] = useState("dashboard");
 
   const handleClick = (page) => {
@@ -28,17 +36,18 @@ export default function Sidebar({ setPage }) {
   };
 
   const menuItems = [
-    { name: "Dashboard", key: "dashboard", icon: LayoutDashboard },
-    { name: "Meal Plan", key: "mealplan", icon: Utensils },
-    { name: "Calorie Tracker", key: "calorie", icon: Apple },
-    { name: "Profile", key: "profile", icon: User },
+    { key: "dashboard", icon: LayoutDashboard },
+    { key: "calorie", icon: Apple },
+    { key: "profile", icon: User },
   ];
 
   return (
     <>
       {/* Mobile Top */}
       <div className="md:hidden flex items-center justify-between p-4 bg-white shadow">
-        <h1 className="text-xl font-bold text-[#134611]">EatWise</h1>
+        <h1 className="text-xl font-bold text-[#134611]">
+          {t("appName")}
+        </h1>
         <button onClick={() => setIsOpen(true)}>
           <Menu size={28} />
         </button>
@@ -55,7 +64,7 @@ export default function Sidebar({ setPage }) {
       {/* Sidebar */}
       <div
         className={`fixed md:static top-0 left-0 h-full ${
-          collapsed ? "w-20" : "w-64"
+          collapsed ? "w-20 min-w-[80px]" : "w-64 min-w-[250px]"
         }
         bg-white border-r border-gray-200
         p-4 z-50 transform transition-all duration-300 shadow-lg flex flex-col justify-between
@@ -65,11 +74,9 @@ export default function Sidebar({ setPage }) {
         <div>
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            {!collapsed && (
-              <h1 className="text-2xl font-extrabold text-[#134611]">
-                EatWise
-              </h1>
-            )}
+            <h1 className="text-2xl font-extrabold text-[#134611]">
+              {t("appName")}
+            </h1>
 
             <div className="flex items-center gap-2">
               <button
@@ -102,20 +109,22 @@ export default function Sidebar({ setPage }) {
                   }`}
                 >
                   <Icon size={20} />
-                  {!collapsed && <span>{item.name}</span>}
+                  {!collapsed && (
+                    <span className={`${collapsed ? "hidden" : "block"}`}>{t(`sidebar.${item.key}`)}</span>
+                  )}
                 </li>
               );
             })}
           </ul>
         </div>
 
-        {/* 🔻 Logout (PALETTE FIXED) */}
+        {/* Logout */}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 p-3 rounded-xl text-gray-600 hover:bg-[#06D6A0]/10 hover:text-[#134611] transition"
+          className="flex items-center gap-3 p-3 rounded-xl text-gray-600 hover:bg-[#06D6A0]/10 hover:text-[#134611]"
         >
           <LogOut size={20} />
-          {!collapsed && <span className="font-medium">Logout</span>}
+          {!collapsed && <span>{t("sidebar.logout")}</span>}
         </button>
       </div>
     </>

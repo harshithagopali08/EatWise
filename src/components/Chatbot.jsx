@@ -9,7 +9,7 @@ function Chatbot() {
       sender: "bot",
       text: (
   <>
-    Hi! I'm Cupcake your EatWise assistant. Ask me about calories or BMI!
+    Hi! I'm Cupcake your EatWise assistant.
   </>
 )
     }
@@ -24,60 +24,38 @@ function Chatbot() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typing]);
 
- const getBotResponse = (message) => {
 
-    const msg = message.toLowerCase();
+const sendMessage = async () => {
+  if (!input) return;
 
-    if (msg.includes("bmi")) {
-      return "You can calculate BMI using the BMI Calculator in this app.";
-    }
+  const userMsg = { sender: "user", text: input };
+  setMessages(prev => [...prev, userMsg]);
 
-    if (msg.includes("idli")) {
-      return "Idli contains about 58 calories and is a healthy breakfast option.";
-    }
+  setTyping(true); // ✅ START typing
 
-    if (msg.includes("dosa")) {
-      return "A plain dosa contains around 168 calories.";
-    }
+  try {
+    const res = await fetch("http://localhost:5000/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: input })
+    });
 
-    if (msg.includes("hello") || msg.includes("hi")) {
-      return "Hello! I'm Cupcake. How can I help you today?";
-    }
+    const data = await res.json();
 
-    if (msg.includes("healthy")) {
-      return "Healthy foods include fruits, vegetables, and balanced meals.";
-    }
+    setTyping(false); // ✅ STOP typing
 
-    return "I'm still learning! Try asking about BMI or calories.";
-  };
+    const botMsg = { sender: "bot", text: data.reply };
+    setMessages(prev => [...prev, botMsg]);
 
-  const sendMessage = () => {
+  } catch (error) {
+    setTyping(false); // ✅ STOP even on error
+    console.error(error);
+  }
 
-    if (!input.trim()) return;
-
-    const userMessage = {
-      sender: "user",
-      text: input
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInput("");
-
-    setTyping(true);
-
-    setTimeout(() => {
-
-      const botMessage = {
-        sender: "bot",
-        text: getBotResponse(userMessage.text)
-      };
-
-      setMessages(prev => [...prev, botMessage]);
-
-      setTyping(false);
-
-    }, 900);
-  };
+  setInput("");
+};
 
   return (
 
@@ -131,17 +109,18 @@ function Chatbot() {
 
             {messages.map((msg, index) => (
 
-              <div
-                key={index}
-                className={`p-2 rounded-lg max-w-[80%] ${
-                  msg.sender === "user"
-                    ? "bg-green-100 ml-auto text-right"
-                    : "bg-gray-100"
-                }`}
-              >
-                {msg.text}
-              </div>
-
+          <div
+            key={index}
+            className={`p-2 rounded-lg max-w-[80%] ${
+              msg.sender === "user"
+                ? "bg-green-100 ml-auto text-right"
+                : "bg-gray-100"
+            }`}
+          >
+            {typeof msg.text === "string"
+              ? msg.text.replace(/\*\*/g, "").replace(/[*#]/g, "")
+              : msg.text}
+          </div>
             ))}
 
             {typing && (

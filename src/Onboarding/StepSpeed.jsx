@@ -1,40 +1,46 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // ✅ ADDED
 
 function StepSpeed() {
   const navigate = useNavigate();
+  const { t } = useTranslation(); // ✅ ADDED
 
   const [selected, setSelected] = useState("");
   const [error, setError] = useState("");
 
   const speeds = [
     {
-      title: "Relaxed",
-      desc: "Slow and steady progress",
+      title: t("relaxed"), // ✅ UPDATED
+      key: "relaxed",
+      desc: t("relaxedDesc"),
     },
     {
-      title: "Gradual",
-      desc: "Balanced and sustainable",
+      title: t("gradual"),
+      key: "gradual",
+      desc: t("gradualDesc"),
     },
     {
-      title: "Steady",
-      desc: "Faster but manageable",
+      title: t("steady"),
+      key: "steady",
+      desc: t("steadyDesc"),
     },
     {
-      title: "Rapid",
-      desc: "Quick results with dedication",
+      title: t("rapid"),
+      key: "rapid",
+      desc: t("rapidDesc"),
     },
   ];
 
   function next() {
     if (!selected) {
-      setError("Please select a goal speed");
+      setError(t("selectSpeedError")); // ✅ UPDATED
       return;
     }
 
     setError("");
 
-    // ✅ STORE IN LOCALSTORAGE
+    // ✅ STORE IN LOCALSTORAGE (store key, not text)
     localStorage.setItem("goalSpeed", selected);
 
     navigate("/onboarding/medical");
@@ -47,21 +53,21 @@ function StepSpeed() {
     >
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-bold text-[#134611] text-center mb-2">
-          Goal Speed
+          {t("goalSpeedTitle")} {/* ✅ UPDATED */}
         </h1>
 
         <p className="text-gray-500 text-center mb-8">
-          How fast do you want to reach your goal?
+          {t("goalSpeedSubtitle")} {/* ✅ UPDATED */}
         </p>
 
         <div className="space-y-4">
           {speeds.map((speed) => (
             <div
-              key={speed.title}
-              onClick={() => setSelected(speed.title)}
+              key={speed.key}
+              onClick={() => setSelected(speed.key)} // ✅ UPDATED
               className={`p-4 border rounded-xl cursor-pointer transition
               ${
-                selected === speed.title
+                selected === speed.key // ✅ UPDATED
                   ? "bg-[#134611] text-white border-[#134611] shadow-lg"
                   : "bg-white border-gray-200 hover:border-[#06D6A0] hover:shadow-md"
               }`}
@@ -82,7 +88,7 @@ function StepSpeed() {
           className="mt-10 w-full bg-[#EF8A17] hover:bg-[#e07810] 
           text-white py-3 rounded-xl text-lg font-semibold shadow-md"
         >
-          Continue
+          {t("continue")} {/* ✅ UPDATED */}
         </button>
       </div>
     </div>
