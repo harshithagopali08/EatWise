@@ -16,12 +16,12 @@ export default function Sidebar({ setPage }) {
   const { t } = useTranslation();
 
   const [isOpen, setIsOpen] = useState(false);
-const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
-// force expand on mount
-useEffect(() => {
-  setCollapsed(false);
-}, []);
+  // force expand on mount
+  useEffect(() => {
+    setCollapsed(false);
+  }, []);
   const [active, setActive] = useState("dashboard");
 
   const handleClick = (page) => {
@@ -32,7 +32,8 @@ useEffect(() => {
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href = "/login";
+    sessionStorage.clear();
+    window.location.replace("/");
   };
 
   const menuItems = [
@@ -45,9 +46,7 @@ useEffect(() => {
     <>
       {/* Mobile Top */}
       <div className="md:hidden flex items-center justify-between p-4 bg-white shadow">
-        <h1 className="text-xl font-bold text-[#134611]">
-          {t("appName")}
-        </h1>
+        <h1 className="text-xl font-bold text-[#134611]">{t("appName")}</h1>
         <button onClick={() => setIsOpen(true)}>
           <Menu size={28} />
         </button>
@@ -110,7 +109,9 @@ useEffect(() => {
                 >
                   <Icon size={20} />
                   {!collapsed && (
-                    <span className={`${collapsed ? "hidden" : "block"}`}>{t(`sidebar.${item.key}`)}</span>
+                    <span className={`${collapsed ? "hidden" : "block"}`}>
+                      {t(`sidebar.${item.key}`)}
+                    </span>
                   )}
                 </li>
               );
