@@ -15,16 +15,27 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ================= MIDDLEWARE =================
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://eat-wise-phi.vercel.app",
+      "https://eat-wise-p28yqvcxu-harshithagopali08s-projects.vercel.app",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 app.use(express.json());
 
 // ================= DATABASE =================
 export const db = mysql
   .createPool({
-    host: "localhost",
-    user: "root",
-    password: "1234",
-    database: "eatwise",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
   })
   .promise();
 
