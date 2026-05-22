@@ -16,7 +16,7 @@ export default function Dashboard() {
         if (!user?.id) return;
 
         const res = await fetch(
-          `http://localhost:5000/api/user/profile/${user.id}`
+          `https://eat-wise-phi.vercel.app/_/backend/api/user/profile/${user.id}`,
         );
         const data = await res.json();
 
@@ -88,7 +88,6 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 md:p-6 min-h-screen bg-[#F9FAFB]">
-
       {/* Greeting */}
       <div className="flex items-center gap-4 mb-6">
         <img

@@ -16,10 +16,12 @@ function RecommendationPage() {
 
     const userId = JSON.parse(storedUser)?.id;
 
-    fetch(`http://localhost:5000/api/user/profile/${userId}`)
-      .then(res => res.json())
-      .then(data => setUser({ ...data }))
-      .catch(err => console.log(err));
+    fetch(
+      `https://eat-wise-phi.vercel.app/_/backend/api/user/profile/${userId}`,
+    )
+      .then((res) => res.json())
+      .then((data) => setUser({ ...data }))
+      .catch((err) => console.log(err));
   }, []);
 
   const getPlan = async () => {
@@ -28,16 +30,19 @@ function RecommendationPage() {
         i18n.language === "hi"
           ? "Hindi"
           : i18n.language === "te"
-          ? "Telugu"
-          : "English";
+            ? "Telugu"
+            : "English";
 
-      const res = await fetch("http://localhost:5000/api/recommend", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        "https://eat-wise-phi.vercel.app/_/backend/api/recommend",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ language }),
         },
-        body: JSON.stringify({ language }),
-      });
+      );
 
       const data = await res.json();
       if (data?.data?.meals) {
@@ -62,31 +67,39 @@ function RecommendationPage() {
         <div style={healthGrid}>
           {user ? (
             <>
-              <Info label={t("bmi")} value={(user.weight / ((user.height / 100) ** 2)).toFixed(1)} />
-              <Info label={t("calories")} value={Math.round(user.weight * 22)} />
               <Info
-  label={t("goal")}
-  value={
-    user?.goal
-      ? user.goal
-          .split(",")
-          .map((g) => t(`goals.${goalMap[g.trim()] || g}`))
-          .join(", ")
-      : "..."
-  }
-/>
+                label={t("bmi")}
+                value={(user.weight / (user.height / 100) ** 2).toFixed(1)}
+              />
+              <Info
+                label={t("calories")}
+                value={Math.round(user.weight * 22)}
+              />
+              <Info
+                label={t("goal")}
+                value={
+                  user?.goal
+                    ? user.goal
+                        .split(",")
+                        .map((g) => t(`goals.${goalMap[g.trim()] || g}`))
+                        .join(", ")
+                    : "..."
+                }
+              />
 
-<Info
-  label={t("risk")}
-  value={
-    user?.medical
-      ? user.medical
-          .split(",")
-          .map((m) => t(`conditions.${conditionMap[m.trim()] || m}`))
-          .join(", ")
-      : "..."
-  }
-/>
+              <Info
+                label={t("risk")}
+                value={
+                  user?.medical
+                    ? user.medical
+                        .split(",")
+                        .map((m) =>
+                          t(`conditions.${conditionMap[m.trim()] || m}`),
+                        )
+                        .join(", ")
+                    : "..."
+                }
+              />
             </>
           ) : (
             <>
@@ -103,10 +116,26 @@ function RecommendationPage() {
             <h3 style={sectionTitle}>🍱 {t("dailyMeal")}</h3>
 
             <div style={mealGrid}>
-              <Meal title={`🌅 ${t("meals.breakfast")}`} items={result.meals.breakfast} style={tl} />
-              <Meal title={`🍛 ${t("meals.lunch")}`} items={result.meals.lunch} style={tr} />
-              <Meal title={`🌙 ${t("meals.dinner")}`} items={result.meals.dinner} style={bl} />
-              <Meal title={`🍎 ${t("meals.snacks")}`} items={result.meals.snacks} style={br} />
+              <Meal
+                title={`🌅 ${t("meals.breakfast")}`}
+                items={result.meals.breakfast}
+                style={tl}
+              />
+              <Meal
+                title={`🍛 ${t("meals.lunch")}`}
+                items={result.meals.lunch}
+                style={tr}
+              />
+              <Meal
+                title={`🌙 ${t("meals.dinner")}`}
+                items={result.meals.dinner}
+                style={bl}
+              />
+              <Meal
+                title={`🍎 ${t("meals.snacks")}`}
+                items={result.meals.snacks}
+                style={br}
+              />
             </div>
           </>
         )}
@@ -120,7 +149,9 @@ function Meal({ title, items = [], style }) {
     <div style={style}>
       <h4 style={mealTitle}>{title}</h4>
       {items.map((item, i) => (
-        <p key={i} style={itemText}>🍽 {item}</p>
+        <p key={i} style={itemText}>
+          🍽 {item}
+        </p>
       ))}
     </div>
   );
@@ -138,13 +169,42 @@ function Info({ label, value }) {
 // styles unchanged
 const page = { padding: 30, background: "#f5f7f5", minHeight: "100vh" };
 const title = { textAlign: "center", marginBottom: 20 };
-const button = { display: "block", margin: "0 auto 30px", padding: "12px 30px", background: "#ff7a00", color: "#fff", border: "none", borderRadius: 10 };
-const card = { background: "#fff", borderRadius: 16, padding: 25, maxWidth: 900, margin: "auto", boxShadow: "0 4px 15px rgba(0,0,0,0.08)" };
+const button = {
+  display: "block",
+  margin: "0 auto 30px",
+  padding: "12px 30px",
+  background: "#ff7a00",
+  color: "#fff",
+  border: "none",
+  borderRadius: 10,
+};
+const card = {
+  background: "#fff",
+  borderRadius: 16,
+  padding: 25,
+  maxWidth: 900,
+  margin: "auto",
+  boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
+};
 const sectionTitle = { color: "#2e7d32", marginBottom: 15 };
-const healthGrid = { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 15, marginBottom: 25 };
-const infoCard = { background: "#e8f0e6", padding: 15, borderRadius: 10, textAlign: "center" };
+const healthGrid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(4, 1fr)",
+  gap: 15,
+  marginBottom: 25,
+};
+const infoCard = {
+  background: "#e8f0e6",
+  padding: 15,
+  borderRadius: 10,
+  textAlign: "center",
+};
 const mealGrid = { display: "grid", gridTemplateColumns: "1fr 1fr" };
-const tl = { padding: 20, borderRight: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0" };
+const tl = {
+  padding: 20,
+  borderRight: "1px solid #e0e0e0",
+  borderBottom: "1px solid #e0e0e0",
+};
 const tr = { padding: 20, borderBottom: "1px solid #e0e0e0" };
 const bl = { padding: 20, borderRight: "1px solid #e0e0e0" };
 const br = { padding: 20 };
@@ -154,13 +214,13 @@ const goalMap = {
   "Weight Loss": "weightLoss",
   "Muscle Gain": "muscleGain",
   "Healthy Diet": "healthyDiet",
-  "Calorie Tracking": "calorieTracking"
+  "Calorie Tracking": "calorieTracking",
 };
 
 const conditionMap = {
-  "PCOS": "pcos",
-  "Diabetes": "diabetes",
-  "Thyroid": "thyroid",
-  "None": "none"
+  PCOS: "pcos",
+  Diabetes: "diabetes",
+  Thyroid: "thyroid",
+  None: "none",
 };
 export default RecommendationPage;

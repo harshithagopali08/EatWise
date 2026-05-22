@@ -33,11 +33,14 @@ function SignUp() {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:5000/api/auth/register", {
-        name,
-        email,
-        password,
-      });
+      await axios.post(
+        "https://eat-wise-phi.vercel.app/_/backend/api/auth/register",
+        {
+          name,
+          email,
+          password,
+        },
+      );
 
       setSuccess("Account created successfully!");
 

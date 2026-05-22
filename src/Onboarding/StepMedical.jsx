@@ -63,7 +63,10 @@ function StepMedical() {
     console.log("FINAL DATA:", data);
 
     try {
-      await axios.post("http://localhost:5000/api/user/save", data);
+      await axios.post(
+        "https://eat-wise-phi.vercel.app/_/backend/api/user/save",
+        data,
+      );
       console.log("✅ Saved to DB");
     } catch (err) {
       console.error("❌ Save failed:", err.response?.data || err.message);

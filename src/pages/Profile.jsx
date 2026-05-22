@@ -3,8 +3,6 @@ import BMICalculator from "../components/BMICalculator";
 
 import { useTranslation } from "react-i18next";
 
-
-
 export default function Profile() {
   const { t } = useTranslation();
   const [name, setName] = useState("");
@@ -25,7 +23,7 @@ export default function Profile() {
         if (!user?.id) return;
 
         const res = await fetch(
-          `http://localhost:5000/api/user/profile/${user.id}`,
+          `https://eat-wise-phi.vercel.app/_/backend/api/user/profile/${user.id}`,
         );
 
         const data = await res.json();
@@ -59,7 +57,7 @@ export default function Profile() {
       };
 
       const res = await fetch(
-        `http://localhost:5000/api/user/profile/${user.id}`,
+        `https://eat-wise-phi.vercel.app/_/backend/api/user/profile/${user.id}`,
         {
           method: "PUT",
           headers: {
