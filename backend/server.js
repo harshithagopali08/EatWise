@@ -17,16 +17,13 @@ const PORT = process.env.PORT || 5000;
 // ================= MIDDLEWARE =================
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://eat-wise-phi.vercel.app",
-      "https://eat-wise-p28yqvcxu-harshithagopali08s-projects.vercel.app",
-    ],
+    origin: true,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+
+app.options("*", cors());
+
 app.use(express.json());
 
 // ================= DATABASE =================
