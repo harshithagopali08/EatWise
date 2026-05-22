@@ -16,7 +16,9 @@ function RecommendationPage() {
 
     const userId = JSON.parse(storedUser)?.id;
 
-    fetch(`https://eat-wise-phi.vercel.app/api/api/user/profile/${userId}`)
+    fetch(
+      `https://eatwise-backend-39j2.onrender.com/api/api/user/profile/${userId}`,
+    )
       .then((res) => res.json())
       .then((data) => setUser({ ...data }))
       .catch((err) => console.log(err));
@@ -32,7 +34,7 @@ function RecommendationPage() {
             : "English";
 
       const res = await fetch(
-        "https://eat-wise-phi.vercel.app/api/api/recommend",
+        "https://eatwise-backend-39j2.onrender.com/api/api/recommend",
         {
           method: "POST",
           headers: {

@@ -28,13 +28,16 @@ function Chatbot() {
     setTyping(true); // ✅ START typing
 
     try {
-      const res = await fetch("https://eat-wise-phi.vercel.app/api/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        "https://eatwise-backend-39j2.onrender.com/api/api/chat",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: input }),
         },
-        body: JSON.stringify({ message: input }),
-      });
+      );
 
       const data = await res.json();
 

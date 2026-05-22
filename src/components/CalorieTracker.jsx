@@ -39,7 +39,7 @@ const CalorieTracker = () => {
       }
 
       const res = await fetch(
-        `https://eat-wise-phi.vercel.app/api/foods?search=${searchKey}`,
+        `https://eatwise-backend-39j2.onrender.com/api/foods?search=${searchKey}`,
       );
 
       const data = await res.json();
@@ -55,7 +55,7 @@ const CalorieTracker = () => {
     const fetchLogs = async () => {
       try {
         const res = await fetch(
-          `https://eat-wise-phi.vercel.app/api/calorie-log/${user.id}`,
+          `https://eatwise-backend-39j2.onrender.com/api/calorie-log/${user.id}`,
         );
         const data = await res.json();
 
@@ -300,7 +300,7 @@ const CalorieTracker = () => {
 
     try {
       const res = await fetch(
-        "https://eat-wise-phi.vercel.app/api/calorie-log",
+        "https://eatwise-backend-39j2.onrender.com/api/calorie-log",
         {
           method: "POST",
           headers: {
