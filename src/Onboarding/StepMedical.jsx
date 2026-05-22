@@ -33,40 +33,39 @@ function StepMedical() {
 
     setError("");
 
-    // Save locally
     localStorage.setItem("medical", JSON.stringify(selected));
 
     const user = JSON.parse(localStorage.getItem("user"));
 
-    // Prepare data safely
+    // ✅ CRITICAL FIX
+    if (!user?.id) {
+      alert("User not found. Please login again.");
+      return;
+    }
+
     const data = {
-      user_id: user?.id || null,
-      gender: localStorage.getItem("gender") || null,
-      height: parseFloat(localStorage.getItem("height")) || null,
-      age: parseInt(localStorage.getItem("age")) || null,
+      user_id: user.id,
+      gender: localStorage.getItem("gender"),
+      height: parseFloat(localStorage.getItem("height")),
+      age: parseInt(localStorage.getItem("age")),
       goal: JSON.parse(localStorage.getItem("goal") || "[]").join(","),
-      language: localStorage.getItem("language") || null,
-      location: localStorage.getItem("location") || null,
-      weight: parseFloat(localStorage.getItem("weight")) || null,
-      target_weight: parseFloat(localStorage.getItem("targetWeight")) || null,
-      goal_speed: localStorage.getItem("goalSpeed") || null,
+      language: localStorage.getItem("language"),
+      location: localStorage.getItem("location"),
+      weight: parseFloat(localStorage.getItem("weight")),
+      target_weight: parseFloat(localStorage.getItem("targetWeight")),
+      goal_speed: localStorage.getItem("goalSpeed"),
       medical: selected.join(","),
     };
 
     console.log("FINAL DATA:", data);
 
     try {
-      if (user?.id) {
-        await axios.post("http://localhost:5000/api/user/save", data);
-        console.log("Saved to DB");
-      } else {
-        console.warn("User not found — skipping DB save (demo mode)");
-      }
+      await axios.post("http://localhost:5000/api/user/save", data);
+      console.log("✅ Saved to DB");
     } catch (err) {
-      console.warn("Save failed:", err.message);
+      console.error("❌ Save failed:", err.response?.data || err.message);
     }
 
-    // ALWAYS go to dashboard
     navigate("/dashboard");
   }
 

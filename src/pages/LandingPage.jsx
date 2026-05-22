@@ -57,7 +57,7 @@ function LandingPage() {
         </div>
 
         <img
-          src="/images/hero.png"
+          src="hero.png"
           alt="Healthy meal"
           className="w-full max-w-lg"
         />
@@ -109,7 +109,7 @@ function LandingPage() {
       {/* APP PREVIEW */}
       <section className="flex items-center justify-between px-12 py-16 gap-10">
         <img
-          src="/images/app-preview.png"
+          src="app-preview.png"
           alt="EatWise App"
           className="w-full max-w-md"
         />

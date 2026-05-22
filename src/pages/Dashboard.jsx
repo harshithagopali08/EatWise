@@ -14,9 +14,25 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    loadProfile();
-    window.addEventListener("profileUpdated", loadProfile);
-    return () => window.removeEventListener("profileUpdated", loadProfile);
+    const fetchProfile = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user?.id) return;
+
+        const res = await fetch(
+          `http://localhost:5000/api/user/profile/${user.id}`,
+        );
+
+        const data = await res.json();
+
+        setProfile(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchProfile();
   }, []);
 
   const bmi =
@@ -55,51 +71,44 @@ export default function Dashboard() {
             transform="rotate(-90 50 50)"
           />
         </svg>
-        <p className="font-semibold text-gray-700 dark:text-gray-200">
-          {value}
-        </p>
-        <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
+        <p className="font-semibold text-gray-700">{value}</p>
+        <p className="text-sm text-gray-500">{label}</p>
       </div>
     );
   };
 
   return (
-    <div
-      className="p-4 md:p-6 min-h-screen 
-    bg-[#F9FAFB] dark:bg-[#0f172a] transition-colors duration-300"
-    >
+    <div className="p-4 md:p-6 min-h-screen bg-[#F9FAFB]">
       {/* Greeting */}
       <div className="flex items-center gap-4 mb-6">
         <img
           src={profile.avatar}
           className="w-16 h-16 rounded-full border-4 border-[#06D6A0]"
         />
-        <h1 className="text-3xl font-bold text-[#134611] dark:text-white">
+        <h1 className="text-3xl font-bold text-[#134611]">
           Hello, {profile.name || "User"} 👋
         </h1>
       </div>
 
       {/* Cards */}
       <div className="grid md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white dark:bg-[#1e293b] p-4 rounded-xl shadow hover:shadow-lg transition border-l-4 border-[#06D6A0]">
-          <p className="text-gray-500 dark:text-gray-400">Height</p>
-          <h2 className="text-xl font-bold text-[#134611] dark:text-white">
+        <div className="bg-white p-4 rounded-xl shadow border-l-4 border-[#06D6A0]">
+          <p className="text-gray-500">Height</p>
+          <h2 className="text-xl font-bold text-[#134611]">
             {profile.height || "--"} cm
           </h2>
         </div>
 
-        <div className="bg-white dark:bg-[#1e293b] p-4 rounded-xl shadow hover:shadow-lg transition border-l-4 border-[#EF8A17]">
-          <p className="text-gray-500 dark:text-gray-400">Weight</p>
-          <h2 className="text-xl font-bold text-[#134611] dark:text-white">
+        <div className="bg-white p-4 rounded-xl shadow border-l-4 border-[#EF8A17]">
+          <p className="text-gray-500">Weight</p>
+          <h2 className="text-xl font-bold text-[#134611]">
             {profile.weight || "--"} kg
           </h2>
         </div>
 
-        <div className="bg-white dark:bg-[#1e293b] p-4 rounded-xl shadow hover:shadow-lg transition border-l-4 border-[#C6C013]">
-          <p className="text-gray-500 dark:text-gray-400">BMI</p>
-          <h2 className="text-xl font-bold text-[#134611] dark:text-white">
-            {bmi}
-          </h2>
+        <div className="bg-white p-4 rounded-xl shadow border-l-4 border-[#C6C013]">
+          <p className="text-gray-500">BMI</p>
+          <h2 className="text-xl font-bold text-[#134611]">{bmi}</h2>
         </div>
       </div>
 
@@ -111,8 +120,8 @@ export default function Dashboard() {
       </div>
 
       {/* Calories */}
-      <div className="bg-white dark:bg-[#1e293b] p-6 rounded-xl shadow hover:shadow-lg transition">
-        <h2 className="text-xl font-semibold mb-4 text-[#134611] dark:text-white">
+      <div className="bg-white p-6 rounded-xl shadow">
+        <h2 className="text-xl font-semibold mb-4 text-[#134611]">
           Weekly Calories
         </h2>
 
@@ -124,9 +133,7 @@ export default function Dashboard() {
                 style={{ height: `${cal / 20}px` }}
               ></div>
 
-              <p className="text-sm mt-1 text-gray-600 dark:text-gray-400">
-                {days[i]}
-              </p>
+              <p className="text-sm mt-1 text-gray-600">{days[i]}</p>
             </div>
           ))}
         </div>
@@ -134,8 +141,8 @@ export default function Dashboard() {
 
       {/* Controls */}
       <div className="mt-8 grid grid-cols-2 gap-4">
-        <div className="bg-white dark:bg-[#1e293b] p-4 rounded-xl shadow">
-          <p className="text-gray-600 dark:text-gray-400">Water Intake</p>
+        <div className="bg-white p-4 rounded-xl shadow">
+          <p className="text-gray-600">Water Intake</p>
           <input
             type="range"
             min="0"
@@ -146,8 +153,8 @@ export default function Dashboard() {
           />
         </div>
 
-        <div className="bg-white dark:bg-[#1e293b] p-4 rounded-xl shadow">
-          <p className="text-gray-600 dark:text-gray-400">Sleep</p>
+        <div className="bg-white p-4 rounded-xl shadow">
+          <p className="text-gray-600">Sleep</p>
           <input
             type="range"
             min="0"

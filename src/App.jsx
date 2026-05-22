@@ -6,11 +6,11 @@ import {
 } from "react-router-dom";
 
 /* MEMBER 1 PAGES */
-import LandingPage from "./Pages/LandingPage";
-import Login from "./Pages/Login";
-import SignUp from "./Pages/SignUp";
-import UserDetails from "./Pages/UserDetails";
-import Dashboard from "./Pages/Dashboard";
+import LandingPage from "./pages/LandingPage";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import UserDetails from "./pages/UserDetails";
+import Dashboard from "./pages/Dashboard";
 
 /* ONBOARDING */
 import StepGoal from "./Onboarding/StepGoal";
@@ -22,9 +22,8 @@ import StepTargetWeight from "./Onboarding/StepTargetWeight";
 import StepSpeed from "./Onboarding/StepSpeed";
 import StepMedical from "./Onboarding/StepMedical";
 
-/* MEMBER 2 & 3 COMPONENTS */
+/* COMPONENTS */
 import Sidebar from "./components/Sidebar";
-import Navbar from "./components/Navbar";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import Chatbot from "./components/Chatbot";
 
@@ -41,7 +40,7 @@ function Layout() {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* 🌐 GLOBAL FEATURES */}
+      {/* GLOBAL FEATURES */}
       <LanguageSwitcher />
       <Chatbot />
 
@@ -53,11 +52,11 @@ function Layout() {
       {/* Main Content */}
       <div className="flex-1 p-6">
         <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/mealplan" element={<MealPlan />} />
-          <Route path="/calorie" element={<CaloriePage />} />
-          <Route path="/bmi" element={<BMIPage />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="mealplan" element={<MealPlan />} />
+          <Route path="calorie" element={<CaloriePage />} />
+          <Route path="bmi" element={<BMIPage />} />
         </Routes>
       </div>
 
@@ -77,15 +76,15 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        {/* ================== PUBLIC ================== */}
+        {/* PUBLIC */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* ================== USER DETAILS ================== */}
+        {/* USER DETAILS */}
         <Route path="/user-details" element={<UserDetails />} />
 
-        {/* ================== ONBOARDING ================== */}
+        {/* ONBOARDING */}
         <Route path="/onboarding/goal" element={<StepGoal />} />
         <Route path="/onboarding/age" element={<StepAge />} />
         <Route path="/onboarding/location" element={<StepLocation />} />
@@ -98,7 +97,7 @@ export default function App() {
         <Route path="/onboarding/speed" element={<StepSpeed />} />
         <Route path="/onboarding/medical" element={<StepMedical />} />
 
-        {/* ================== DASHBOARD (WITH LAYOUT) ================== */}
+        {/* DASHBOARD */}
         <Route path="/*" element={<Layout />} />
       </Routes>
     </Router>

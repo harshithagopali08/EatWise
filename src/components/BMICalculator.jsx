@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
+
 function BMICalculator() {
 
   const { t } = useTranslation();
@@ -111,7 +112,7 @@ function BMICalculator() {
 
   return (
 
-    <div className="bg-white border border-gray-100 shadow-lg rounded-3xl p-8 w-full max-w-md">
+    <div className="bg-white border border-gray-100 shadow-lg rounded-3xl p-8 w-full max-w-lg">
 
       <h2 className="text-2xl font-semibold text-green-900 text-center mb-6">
         {t("bmi")}

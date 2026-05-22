@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import BMICalculator from "../components/BMICalculator"; // ✅ FIXED
+
+
 
 export default function Profile() {
   const [name, setName] = useState("");
@@ -22,11 +25,6 @@ export default function Profile() {
     }
   }, []);
 
-  const bmi =
-    weight && height
-      ? (weight / ((height / 100) * (height / 100))).toFixed(1)
-      : 0;
-
   const handleSave = () => {
     const data = { name, age, weight, height, avatar };
     localStorage.setItem("profile", JSON.stringify(data));
@@ -45,8 +43,7 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex justify-center p-4">
-
-      <div className="w-full max-w-md md:max-w-2xl bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition">
+             <div className="w-full max-w-md md:max-w-2xl bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition">
 
         <h1 className="text-3xl font-bold text-center mb-6 text-[#134611]">
           Profile
@@ -98,26 +95,11 @@ export default function Profile() {
             onChange={(e) => setAge(e.target.value)}
             className="p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#EF8A17]"
           />
-          <input
-            type="number"
-            placeholder="Weight"
-            value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-            className="p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#06D6A0]"
-          />
-          <input
-            type="number"
-            placeholder="Height"
-            value={height}
-            onChange={(e) => setHeight(e.target.value)}
-            className="p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#06D6A0]"
-          />
         </div>
 
-        {/* BMI */}
-        <div className="mt-6 bg-[#134611] text-white p-4 rounded-xl text-center">
-          <p>Your BMI</p>
-          <h2 className="text-2xl font-bold">{bmi}</h2>
+        {/* ✅ BMI Calculator (UI unchanged outside) */}
+        <div className="mt-6 flex justify-center">
+          <BMICalculator />
         </div>
 
         {/* Save */}
