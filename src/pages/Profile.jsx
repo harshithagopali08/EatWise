@@ -23,7 +23,7 @@ export default function Profile() {
         if (!user?.id) return;
 
         const res = await fetch(
-          `https://eat-wise-phi.vercel.app/_/backend/api/user/profile/${user.id}`,
+          `https://eat-wise-phi.vercel.app/api/api/user/profile/${user.id}`,
         );
 
         const data = await res.json();
@@ -57,7 +57,7 @@ export default function Profile() {
       };
 
       const res = await fetch(
-        `https://eat-wise-phi.vercel.app/_/backend/api/user/profile/${user.id}`,
+        `https://eat-wise-phi.vercel.app/api/api/user/profile/${user.id}`,
         {
           method: "PUT",
           headers: {

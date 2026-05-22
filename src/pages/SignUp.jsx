@@ -34,7 +34,7 @@ function SignUp() {
 
     try {
       await axios.post(
-        "https://eat-wise-phi.vercel.app/_/backend/api/auth/register",
+        "https://eat-wise-phi.vercel.app/api/api/auth/register",
         {
           name,
           email,

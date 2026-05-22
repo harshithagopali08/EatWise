@@ -32,7 +32,7 @@ function Login() {
 
     try {
       const res = await axios.post(
-        "https://eat-wise-phi.vercel.app/_/backend/api/auth/login",
+        "https://eat-wise-phi.vercel.app/api/api/auth/login",
         {
           email,
           password,
@@ -50,7 +50,7 @@ function Login() {
       // 🔥 FETCH USER DETAILS (IMPORTANT)
       try {
         const profileRes = await axios.get(
-          `https://eat-wise-phi.vercel.app/_/backend/api/user/profile/${userId}`,
+          `https://eat-wise-phi.vercel.app/api/api/user/profile/${userId}`,
         );
         profile = profileRes.data;
       } catch (err) {
