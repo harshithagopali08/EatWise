@@ -32,7 +32,7 @@ function Login() {
 
     try {
       const res = await axios.post(
-        "https://eatwise-backend-39j2.onrender.com/api/api/auth/login",
+        "https://eatwise-backend-39j2.onrender.com/api/auth/login",
         {
           email,
           password,
@@ -50,7 +50,7 @@ function Login() {
       // 🔥 FETCH USER DETAILS (IMPORTANT)
       try {
         const profileRes = await axios.get(
-          `https://eatwise-backend-39j2.onrender.com/api/api/user/profile/${userId}`,
+          `https://eatwise-backend-39j2.onrender.com/api/user/profile/${userId}`,
         );
         profile = profileRes.data;
       } catch (err) {

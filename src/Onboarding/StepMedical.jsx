@@ -64,7 +64,7 @@ function StepMedical() {
 
     try {
       await axios.post(
-        "https://eatwise-backend-39j2.onrender.com/api/api/user/save",
+        "https://eatwise-backend-39j2.onrender.com/api/user/save",
         data,
       );
       console.log("✅ Saved to DB");

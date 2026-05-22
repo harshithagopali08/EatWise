@@ -16,7 +16,7 @@ export default function Dashboard() {
         if (!user?.id) return;
 
         const res = await fetch(
-          `https://eatwise-backend-39j2.onrender.com/api/api/user/profile/${user.id}`,
+          `https://eatwise-backend-39j2.onrender.com/api/user/profile/${user.id}`,
         );
         const data = await res.json();
 

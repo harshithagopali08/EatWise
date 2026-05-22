@@ -17,7 +17,7 @@ function RecommendationPage() {
     const userId = JSON.parse(storedUser)?.id;
 
     fetch(
-      `https://eatwise-backend-39j2.onrender.com/api/api/user/profile/${userId}`,
+      `https://eatwise-backend-39j2.onrender.com/api/user/profile/${userId}`,
     )
       .then((res) => res.json())
       .then((data) => setUser({ ...data }))
@@ -34,7 +34,7 @@ function RecommendationPage() {
             : "English";
 
       const res = await fetch(
-        "https://eatwise-backend-39j2.onrender.com/api/api/recommend",
+        "https://eatwise-backend-39j2.onrender.com/api/recommend",
         {
           method: "POST",
           headers: {

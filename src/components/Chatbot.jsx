@@ -29,7 +29,7 @@ function Chatbot() {
 
     try {
       const res = await fetch(
-        "https://eatwise-backend-39j2.onrender.com/api/api/chat",
+        "https://eatwise-backend-39j2.onrender.com/api/chat",
         {
           method: "POST",
           headers: {
